@@ -10,5 +10,12 @@ namespace TodoPhoenix.Models
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<TaskItem> Tasks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Project>().HasIndex(p => new { p.UserId, p.Name }).IsUnique();
+        }
     }
 }

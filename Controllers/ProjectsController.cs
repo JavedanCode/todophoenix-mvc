@@ -52,6 +52,15 @@ namespace TodoPhoenix.Controllers
 
                 return View(project);
             }
+            var exists = await _context.Projects.AnyAsync(p =>
+                p.UserId == user.Id && p.Name == project.Name
+            );
+
+            if (exists)
+            {
+                ModelState.AddModelError("Name", "You already have a project with this name.");
+                return PartialView(project);
+            }
 
             project.UserId = user.Id;
 
