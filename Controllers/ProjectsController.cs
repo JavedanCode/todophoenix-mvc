@@ -38,22 +38,38 @@ namespace TodoPhoenix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Project project)
         {
-            Console.WriteLine("POST HIT");
-
             var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                return View(project);
+            }
 
             project.UserId = user.Id;
 
             _context.Add(project);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Dashboard");
+            return Json(new { success = true });
         }
 
         // DELETE: Project
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
 
             var project = await _context
                 .Projects.Include(p => p.Tasks)
@@ -65,7 +81,7 @@ namespace TodoPhoenix.Controllers
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true });
         }
     }
 }

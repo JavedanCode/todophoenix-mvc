@@ -88,7 +88,7 @@ namespace TodoPhoenix.Controllers
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Dashboard", new { projectId = task.ProjectId });
+            return Json(new { success = true });
         }
 
         // Toggle complete
@@ -234,11 +234,7 @@ namespace TodoPhoenix.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(
-                "Index",
-                "Dashboard",
-                new { projectId = existingTask.ProjectId }
-            );
+            return Json(new { success = true });
         }
     }
 }
