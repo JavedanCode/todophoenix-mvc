@@ -88,7 +88,7 @@ namespace TodoPhoenix.Controllers
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { projectId = task.ProjectId });
+            return RedirectToAction("Index", "Dashboard", new { projectId = task.ProjectId });
         }
 
         // Toggle complete

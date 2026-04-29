@@ -22,22 +22,20 @@
             </li>
         }
         </ul>
-        <a asp-controller="Projects" asp-action="Create">
+        <button onclick="openModal('/Projects/Create')">
             + Add Project
-        </a>
+        </button>
     </div>
 
     <!-- MAIN CONTENT -->
     <div style="flex:1;">
         <h2>Tasks</h2>
 
-    @if (Model.SelectedProjectId != null)
+        @if (Model.SelectedProjectId != null)
     {
-        <a asp-controller="Tasks"
-            asp-action="Create"
-            asp-route-projectId="@Model.SelectedProjectId">
-                + Add Task
-        </a>
+        <button onclick="openModal('/Tasks/Create?projectId=@Model.SelectedProjectId')">
+            + Add Task
+        </button>
     }
 
         <ul>
@@ -57,3 +55,26 @@
     </div>
 
 </div>
+
+<div id="modalContainer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+    <div id="modalContent" style="background:white; margin:10% auto; padding:20px; width:400px;">
+        <button onclick="closeModal()">Close</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+function openModal(url) {
+    fetch(url)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("modalBody").innerHTML = html;
+            document.getElementById("modalContainer").style.display = "block";
+        });
+}
+
+function closeModal() {
+    document.getElementById("modalContainer").style.display = "none";
+    document.getElementById("modalBody").innerHTML = "";
+}
+</script>
