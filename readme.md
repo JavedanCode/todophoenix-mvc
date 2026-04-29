@@ -168,7 +168,7 @@ This is a **full-stack ASP.NET application**, which means:
 ## 👤 Author
 
 **Soren Persian**  
-GitHub: https://github.com/YOUR_GITHUB
+GitHub: https://github.com/JavedanCode
 
 ---
 
