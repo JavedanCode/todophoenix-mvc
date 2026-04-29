@@ -1,0 +1,59 @@
+@model TodoPhoenix.Models.ViewModels.DashboardViewModel
+
+<div style="display:flex; gap:40px;">
+
+    <!-- SIDEBAR -->
+    <div style="width:250px;">
+        <h3>Filters</h3>
+        <ul>
+            <li><a asp-action="Index" asp-route-filter="All">All Tasks</a></li>
+            <li><a asp-action="Index" asp-route-filter="Today">Today</a></li>
+            <li><a asp-action="Index" asp-route-filter="Completed">Completed</a></li>
+        </ul>
+
+        <h3>Projects</h3>
+        <ul>
+        @foreach (var project in Model.Projects)
+        {
+            <li>
+                <a asp-action="Index" asp-route-projectId="@project.Id">
+                    @project.Name
+                </a>
+            </li>
+        }
+        </ul>
+        <a asp-controller="Projects" asp-action="Create">
+            + Add Project
+        </a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div style="flex:1;">
+        <h2>Tasks</h2>
+
+    @if (Model.SelectedProjectId != null)
+    {
+        <a asp-controller="Tasks"
+            asp-action="Create"
+            asp-route-projectId="@Model.SelectedProjectId">
+                + Add Task
+        </a>
+    }
+
+        <ul>
+        @foreach (var task in Model.Tasks)
+        {
+            <li>
+                <strong>@task.Title</strong>
+                (@(task.IsCompleted ? "Done" : "Pending"))
+
+                <form asp-controller="Tasks" asp-action="ToggleComplete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@task.Id" />
+                    <button type="submit">Toggle</button>
+                </form>
+            </li>
+        }
+        </ul>
+    </div>
+
+</div>
