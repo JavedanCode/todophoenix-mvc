@@ -1,25 +1,30 @@
 @model TodoPhoenix.Models.ViewModels.LoginViewModel
 
-<h2>Login</h2>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4" style="width:400px;">
+        <h3 class="text-center mb-3">Login</h3>
 
-<form method="post">
-     @Html.AntiForgeryToken()
-    <div asp-validation-summary="All" style="color:red"></div>
+        <form method="post">
+            @Html.AntiForgeryToken()
 
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" />
+            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label>Password</label>
+                <input asp-for="Password" type="password" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Don't have an account?
+            <a asp-action="Register">Sign up</a>
+        </p>
     </div>
-
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
-    </div>
-
-    <button type="submit">Login</button>
-</form>
-
-<p>
-    Don't have an account?
-    <a asp-action="Register">Sign up</a>
-</p>
+</div>

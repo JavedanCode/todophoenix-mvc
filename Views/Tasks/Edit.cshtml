@@ -13,28 +13,28 @@
     <input type="hidden" asp-for="ProjectId" />
 
     <div>
-        <label asp-for="Title"></label>
-        <input asp-for="Title" />
+        <label asp-for="Title" ></label>
+        <input asp-for="Title" class="form-control"/>
     </div>
 
     <div>
         <label asp-for="Description"></label>
-        <input asp-for="Description" />
+        <input asp-for="Description" class="form-control" />
     </div>
 
     <div>
         <label asp-for="DueDate"></label>
-        <input asp-for="DueDate" type="date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+        <input asp-for="DueDate" type="date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control"/>
     </div>
 
     <div>
         <label asp-for="Priority"></label>
-        <select asp-for="Priority">
+        <select asp-for="Priority" class="form-control">
             <option>Low</option>
             <option>Medium</option>
             <option>High</option>
         </select>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" class="btn btn-primary w-100 mt-3">Save</button>
 </form>

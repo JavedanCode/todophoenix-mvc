@@ -10,22 +10,40 @@
     <link rel="stylesheet" href="~/TodoPhoenix.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-       @if (User.Identity.IsAuthenticated)
-{
-    <a asp-controller="Account" asp-action="Logout">Logout</a>
-}
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="app-container">
 
-    <footer style="text-align:center; margin-top:40px;">
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <h5 class="mb-3">TodoPhoenix</h5>
+
+                @RenderSection("Sidebar", required: false)
+
+                <hr />
+
+                <a asp-controller="Account" asp-action="Logout">Logout</a>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                @RenderBody()
+            </main>
+
+        </div>
+    }
+    else
+    {
+        <!-- Login/Register pages -->
+        <div class="container">
+            @RenderBody()
+        </div>
+    }
+
+<footer style="text-align:center; padding:15px; border-top:1px solid #1e293b;">
     <p>
         © 2026 - TodoPhoenix |
-        <a href="https://github.com/YOUR_GITHUB" target="_blank">
+        <a href="https://github.com/JavedanCode" target="_blank">
             GitHub
         </a>
     </p>
@@ -35,7 +53,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 </body>

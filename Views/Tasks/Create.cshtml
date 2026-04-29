@@ -14,29 +14,29 @@
 
     <div>
         <label asp-for="Title"></label>
-        <input asp-for="Title" />
+        <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" style="color:red"></span>
     </div>
 
     <div>
         <label asp-for="Description"></label>
-        <input asp-for="Description" />
+        <input asp-for="Description" class="form-control" />
     </div>
 
     <div>
         <label asp-for="DueDate"></label>
-        <input asp-for="DueDate" type="date" />
+        <input asp-for="DueDate" type="date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control"/>
         <span asp-validation-for="DueDate" style="color:red"></span>
     </div>
 
     <div>
         <label asp-for="Priority"></label>
-        <select asp-for="Priority">
+        <select asp-for="Priority" class="form-control">
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
         </select>
     </div>
 
-    <button type="submit">Create</button>
+    <button type="submit" class="btn btn-primary w-100 mt-3">Create</button>
 </form>
