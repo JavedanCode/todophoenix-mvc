@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace TodoPhoenix.Models
 {
@@ -12,7 +13,7 @@ namespace TodoPhoenix.Models
 
         public string Description { get; set; }
 
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
         public string Priority { get; set; }
 
@@ -22,6 +23,7 @@ namespace TodoPhoenix.Models
         public int ProjectId { get; set; }
 
         [ForeignKey("ProjectId")]
+        [ValidateNever]
         public Project Project { get; set; }
     }
 }

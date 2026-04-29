@@ -1,0 +1,19 @@
+@model TodoPhoenix.Models.Project
+
+<h2>@Model.Name - Tasks</h2>
+
+<a asp-action="Create" asp-route-projectId="@Model.Id">Add Task</a>
+
+<ul>
+@foreach (var task in Model.Tasks)
+{
+    <li>
+        @task.Title 
+        (@(task.IsCompleted ? "Done" : "Pending"))
+
+        <a asp-action="ToggleComplete" asp-route-id="@task.Id">
+            Toggle
+        </a>
+    </li>
+}
+</ul>

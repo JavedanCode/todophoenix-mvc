@@ -8,5 +8,8 @@
 @foreach (var item in Model)
 {
     <li>@item.Name</li>
+    <a asp-controller="Tasks" asp-action="Index" asp-route-projectId="@item.Id">
+    View Tasks
+</a>
 }
 </ul>

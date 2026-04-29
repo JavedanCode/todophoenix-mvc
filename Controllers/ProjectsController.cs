@@ -36,22 +36,13 @@ namespace TodoPhoenix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        // POST: Projects/Create
         public async Task<IActionResult> Create(Project project)
         {
+            Console.WriteLine("POST HIT");
+
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null)
-                return Unauthorized();
-
             project.UserId = user.Id;
-
-            if (!ModelState.IsValid)
-            {
-                return View(project);
-            }
 
             _context.Add(project);
             await _context.SaveChangesAsync();
