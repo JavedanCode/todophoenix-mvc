@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoPhoenix.Models;
@@ -9,18 +10,22 @@ namespace TodoPhoenix.Controllers
     public class TasksController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public TasksController(AppDbContext context)
+        public TasksController(AppDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Show tasks for a project
         public async Task<IActionResult> Index(int projectId)
         {
+            var user = await _userManager.GetUserAsync(User);
+
             var project = await _context
                 .Projects.Include(p => p.Tasks)
-                .FirstOrDefaultAsync(p => p.Id == projectId);
+                .FirstOrDefaultAsync(p => p.Id == projectId && p.UserId == user.Id);
 
             if (project == null)
                 return NotFound();
@@ -29,8 +34,17 @@ namespace TodoPhoenix.Controllers
         }
 
         // GET: Create task
-        public IActionResult Create(int projectId)
+        public async Task<IActionResult> Create(int projectId)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            var project = await _context.Projects.FirstOrDefaultAsync(p =>
+                p.Id == projectId && p.UserId == user.Id
+            );
+
+            if (project == null)
+                return NotFound();
+
             var task = new TaskItem { ProjectId = projectId };
             return View(task);
         }
@@ -40,6 +54,15 @@ namespace TodoPhoenix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TaskItem task)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            var project = await _context.Projects.FirstOrDefaultAsync(p =>
+                p.Id == task.ProjectId && p.UserId == user.Id
+            );
+
+            if (project == null)
+                return Unauthorized();
+
             if (!ModelState.IsValid)
             {
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
@@ -50,7 +73,6 @@ namespace TodoPhoenix.Controllers
                 return View(task);
             }
 
-            // ✅ FIX HERE
             if (task.DueDate.HasValue)
             {
                 task.DueDate = DateTime.SpecifyKind(task.DueDate.Value, DateTimeKind.Utc);
@@ -65,7 +87,11 @@ namespace TodoPhoenix.Controllers
         // Toggle complete
         public async Task<IActionResult> ToggleComplete(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+
+            var task = await _context
+                .Tasks.Include(t => t.Project)
+                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
 
             if (task == null)
                 return NotFound();
