@@ -10,6 +10,7 @@
     <li>@item.Name</li>
     <a asp-controller="Tasks" asp-action="Index" asp-route-projectId="@item.Id">
     View Tasks
-</a>
+    </a>
+    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 }
 </ul>

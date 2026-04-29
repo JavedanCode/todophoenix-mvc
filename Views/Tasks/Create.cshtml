@@ -28,7 +28,11 @@
 
     <div>
         <label asp-for="Priority"></label>
-        <input asp-for="Priority" />
+        <select asp-for="Priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
     </div>
 
     <button type="submit">Create</button>

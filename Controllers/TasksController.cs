@@ -22,6 +22,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> Index(int projectId)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var project = await _context
                 .Projects.Include(p => p.Tasks)
@@ -37,6 +39,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> Create(int projectId)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var project = await _context.Projects.FirstOrDefaultAsync(p =>
                 p.Id == projectId && p.UserId == user.Id
@@ -45,7 +49,7 @@ namespace TodoPhoenix.Controllers
             if (project == null)
                 return NotFound();
 
-            var task = new TaskItem { ProjectId = projectId };
+            var task = new TaskItem { ProjectId = projectId, DueDate = DateTime.UtcNow.Date };
             return View(task);
         }
 
@@ -55,6 +59,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> Create(TaskItem task)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var project = await _context.Projects.FirstOrDefaultAsync(p =>
                 p.Id == task.ProjectId && p.UserId == user.Id
@@ -73,6 +79,7 @@ namespace TodoPhoenix.Controllers
                 return View(task);
             }
 
+            // Fix DateTime for PostgreSQL
             if (task.DueDate.HasValue)
             {
                 task.DueDate = DateTime.SpecifyKind(task.DueDate.Value, DateTimeKind.Utc);
@@ -88,6 +95,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> ToggleComplete(int id)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var task = await _context
                 .Tasks.Include(t => t.Project)
@@ -107,6 +116,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> All()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var tasks = await _context
                 .Tasks.Include(t => t.Project)
@@ -120,6 +131,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> Today()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var today = DateTime.UtcNow.Date;
 
@@ -139,6 +152,8 @@ namespace TodoPhoenix.Controllers
         public async Task<IActionResult> Completed()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var tasks = await _context
                 .Tasks.Include(t => t.Project)
@@ -146,6 +161,28 @@ namespace TodoPhoenix.Controllers
                 .ToListAsync();
 
             return View(tasks);
+        }
+
+        // DELETE: Task
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var task = await _context
+                .Tasks.Include(t => t.Project)
+                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
+
+            if (task == null)
+                return NotFound();
+
+            _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", new { projectId = task.ProjectId });
         }
     }
 }

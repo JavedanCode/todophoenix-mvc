@@ -4,6 +4,7 @@
 
 <a asp-action="Create" asp-route-projectId="@Model.Id">Add Task</a>
 
+
 <ul>
 @foreach (var task in Model.Tasks)
 {
@@ -11,9 +12,15 @@
         @task.Title 
         (@(task.IsCompleted ? "Done" : "Pending"))
 
+        <form asp-action="Delete" method="post" style="display:inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@task.Id" />
+            <button type="submit">Delete</button>
+        </form>
         <a asp-action="ToggleComplete" asp-route-id="@task.Id">
             Toggle
         </a>
+        
     </li>
 }
 </ul>

@@ -49,5 +49,23 @@ namespace TodoPhoenix.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // DELETE: Project
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var project = await _context
+                .Projects.Include(p => p.Tasks)
+                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == user.Id);
+
+            if (project == null)
+                return NotFound();
+
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
