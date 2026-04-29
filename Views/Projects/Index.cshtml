@@ -1,0 +1,12 @@
+@model IEnumerable<TodoPhoenix.Models.Project>
+
+<h2>My Projects</h2>
+
+<a asp-action="Create">Create New Project</a>
+
+<ul>
+@foreach (var item in Model)
+{
+    <li>@item.Name</li>
+}
+</ul>
