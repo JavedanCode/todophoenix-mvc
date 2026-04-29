@@ -1,0 +1,40 @@
+@model TodoPhoenix.Models.TaskItem
+
+@{
+    Layout = null;
+}
+
+<h2>Edit Task</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ProjectId" />
+
+    <div>
+        <label asp-for="Title"></label>
+        <input asp-for="Title" />
+    </div>
+
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" />
+    </div>
+
+    <div>
+        <label asp-for="DueDate"></label>
+        <input asp-for="DueDate" type="date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div>
+        <label asp-for="Priority"></label>
+        <select asp-for="Priority">
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+        </select>
+    </div>
+
+    <button type="submit">Save</button>
+</form>

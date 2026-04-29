@@ -1,5 +1,7 @@
 @model TodoPhoenix.Models.ViewModels.DashboardViewModel
-
+<form id="antiForgeryForm" method="post">
+    @Html.AntiForgeryToken()
+</form>
 <div style="display:flex; gap:40px;">
 
     <!-- SIDEBAR -->
@@ -41,14 +43,19 @@
         <ul>
         @foreach (var task in Model.Tasks)
         {
-            <li>
+           <li>
                 <strong>@task.Title</strong>
                 (@(task.IsCompleted ? "Done" : "Pending"))
 
-                <form asp-controller="Tasks" asp-action="ToggleComplete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="@task.Id" />
-                    <button type="submit">Toggle</button>
-                </form>
+                <button onclick="toggleTask(@task.Id)">Toggle</button>
+
+                <button onclick="openModal('/Tasks/Edit/@task.Id')">
+                    Edit
+                </button>
+
+                <button onclick="deleteTask(@task.Id)">
+                    Delete
+                </button>
             </li>
         }
         </ul>
@@ -76,5 +83,27 @@ function openModal(url) {
 function closeModal() {
     document.getElementById("modalContainer").style.display = "none";
     document.getElementById("modalBody").innerHTML = "";
+}
+
+function toggleTask(id) {
+    fetch('/Tasks/ToggleComplete', {
+        method: 'POST',
+        headers: {
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+        },
+        body: new URLSearchParams({ id: id })
+    })
+    .then(() => location.reload());
+}
+
+function deleteTask(id) {
+    fetch('/Tasks/Delete', {
+        method: 'POST',
+        headers: {
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+        },
+        body: new URLSearchParams({ id: id })
+    })
+    .then(() => location.reload());
 }
 </script>

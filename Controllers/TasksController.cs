@@ -92,6 +92,8 @@ namespace TodoPhoenix.Controllers
         }
 
         // Toggle complete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleComplete(int id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -106,10 +108,9 @@ namespace TodoPhoenix.Controllers
                 return NotFound();
 
             task.IsCompleted = !task.IsCompleted;
-
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { projectId = task.ProjectId });
+            return Json(new { success = true });
         }
 
         // GET: All tasks for current user
@@ -182,7 +183,62 @@ namespace TodoPhoenix.Controllers
             _context.Tasks.Remove(task);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { projectId = task.ProjectId });
+            return Json(new { success = true });
+        }
+
+        // GET: Edit task
+        public async Task<IActionResult> Edit(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var task = await _context
+                .Tasks.Include(t => t.Project)
+                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
+
+            if (task == null)
+                return NotFound();
+
+            return View(task);
+        }
+
+        // POST: Edit task
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(TaskItem task)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            var existingTask = await _context
+                .Tasks.Include(t => t.Project)
+                .FirstOrDefaultAsync(t => t.Id == task.Id && t.Project.UserId == user.Id);
+
+            if (existingTask == null)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(task);
+
+            // update fields
+            existingTask.Title = task.Title;
+            existingTask.Description = task.Description;
+            existingTask.Priority = task.Priority;
+
+            if (task.DueDate.HasValue)
+            {
+                existingTask.DueDate = DateTime.SpecifyKind(task.DueDate.Value, DateTimeKind.Utc);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(
+                "Index",
+                "Dashboard",
+                new { projectId = existingTask.ProjectId }
+            );
         }
     }
 }
