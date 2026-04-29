@@ -102,5 +102,50 @@ namespace TodoPhoenix.Controllers
 
             return RedirectToAction("Index", new { projectId = task.ProjectId });
         }
+
+        // GET: All tasks for current user
+        public async Task<IActionResult> All()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var tasks = await _context
+                .Tasks.Include(t => t.Project)
+                .Where(t => t.Project.UserId == user.Id)
+                .ToListAsync();
+
+            return View(tasks);
+        }
+
+        // GET: Tasks due today
+        public async Task<IActionResult> Today()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var today = DateTime.UtcNow.Date;
+
+            var tasks = await _context
+                .Tasks.Include(t => t.Project)
+                .Where(t =>
+                    t.Project.UserId == user.Id
+                    && t.DueDate.HasValue
+                    && t.DueDate.Value.Date == today
+                )
+                .ToListAsync();
+
+            return View(tasks);
+        }
+
+        // GET: Completed tasks
+        public async Task<IActionResult> Completed()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var tasks = await _context
+                .Tasks.Include(t => t.Project)
+                .Where(t => t.Project.UserId == user.Id && t.IsCompleted)
+                .ToListAsync();
+
+            return View(tasks);
+        }
     }
 }

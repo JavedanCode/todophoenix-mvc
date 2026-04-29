@@ -1,0 +1,12 @@
+@model IEnumerable<TodoPhoenix.Models.TaskItem>
+
+<h2>Today's Tasks</h2>
+
+<ul>
+@foreach (var task in Model)
+{
+    <li>
+        <strong>@task.Title</strong> - @task.Project.Name
+    </li>
+}
+</ul>

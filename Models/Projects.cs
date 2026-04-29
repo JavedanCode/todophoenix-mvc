@@ -11,13 +11,11 @@ namespace TodoPhoenix.Models
         [Required]
         public string Name { get; set; }
 
-        // 🔗 Relationship to User
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
         public IdentityUser User { get; set; }
 
-        // 🔗 One Project → Many Tasks
         public List<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 }
