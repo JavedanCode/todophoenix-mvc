@@ -19,9 +19,12 @@ namespace TodoPhoenix.Controllers
         }
 
         // GET: Projects
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var projects = await _context.Projects.Where(p => p.UserId == user.Id).ToListAsync();
 
@@ -29,6 +32,7 @@ namespace TodoPhoenix.Controllers
         }
 
         // GET: Projects/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -43,17 +47,13 @@ namespace TodoPhoenix.Controllers
             if (user == null)
                 return Unauthorized();
 
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
+            project.Name = project.Name?.Trim();
 
-                return View(project);
-            }
+            if (!ModelState.IsValid)
+                return PartialView(project);
+
             var exists = await _context.Projects.AnyAsync(p =>
-                p.UserId == user.Id && p.Name == project.Name
+                p.UserId == user.Id && p.Name.ToLower() == project.Name.ToLower()
             );
 
             if (exists)
@@ -64,7 +64,7 @@ namespace TodoPhoenix.Controllers
 
             project.UserId = user.Id;
 
-            _context.Add(project);
+            _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
             return Json(new { success = true });
@@ -86,6 +86,8 @@ namespace TodoPhoenix.Controllers
 
             if (project == null)
                 return NotFound();
+
+            _context.Tasks.RemoveRange(project.Tasks);
 
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
