@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TodoPhoenix.Models.ViewModels;
 
 namespace TodoPhoenix.Controllers
 {
+    [AllowAnonymous] // Allow access without login
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -21,27 +23,37 @@ namespace TodoPhoenix.Controllers
         // GET: Login
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Dashboard");
+
             return View();
         }
 
         // POST: Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid login attempt");
+                return View(model);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
+                user.UserName,
                 model.Password,
                 false,
-                false
+                lockoutOnFailure: false
             );
 
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index", "Dashboard");
-            }
 
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
@@ -50,11 +62,15 @@ namespace TodoPhoenix.Controllers
         // GET: Register
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Dashboard");
+
             return View();
         }
 
         // POST: Register
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -65,9 +81,7 @@ namespace TodoPhoenix.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
-            {
                 return RedirectToAction("Login");
-            }
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
@@ -75,7 +89,10 @@ namespace TodoPhoenix.Controllers
             return View(model);
         }
 
-        // Logout
+        // POST: Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

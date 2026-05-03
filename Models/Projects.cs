@@ -9,10 +9,12 @@ namespace TodoPhoenix.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        [StringLength(100, MinimumLength = 1)]
+        public string Name { get; set; } = string.Empty;
 
         [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
-        public string UserId { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey("UserId")]
         [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]

@@ -9,21 +9,25 @@ namespace TodoPhoenix.Models
         public int Id { get; set; }
 
         [Required]
-        public string Title { get; set; }
+        [StringLength(150, MinimumLength = 1)]
+        public string Title { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        [StringLength(500)]
+        public string Description { get; set; } = string.Empty;
 
         public DateTime? DueDate { get; set; }
 
-        public string Priority { get; set; }
+        [Required]
+        [RegularExpression("Low|Medium|High")]
+        public string Priority { get; set; } = "Low";
 
         public bool IsCompleted { get; set; } = false;
 
-        // 🔗 Relationship to Project
+        [Required]
         public int ProjectId { get; set; }
 
         [ForeignKey("ProjectId")]
-        [ValidateNever]
+        [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
         public Project Project { get; set; }
     }
 }
