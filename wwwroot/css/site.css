@@ -199,3 +199,15 @@ a{
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
+
+.github-logo {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease-in-out;
+  filter: invert(1) brightness(1.2);
+  align-self: center;
+}
+
+.github-logo:hover {
+  transform: rotate(360deg);
+}
