@@ -171,5 +171,31 @@ a{
 
 .logout-btn{
     color: white;
-    
+
+}
+
+.task-card {
+    border-left: 4px solid transparent;
+}
+
+.task-card.high {
+    border-left-color: #ef4444; 
+}
+
+.task-card.medium {
+    border-left-color: #f59e0b; 
+}
+
+.task-card.low {
+    border-left-color: #64748b; 
+}
+
+.task-card {
+    transition: all 0.2s ease;
+     cursor: default;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
