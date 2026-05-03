@@ -18,24 +18,8 @@ namespace TodoPhoenix.Controllers
             _userManager = userManager;
         }
 
-        // Show tasks for a project
-        public async Task<IActionResult> Index(int projectId)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var project = await _context
-                .Projects.Include(p => p.Tasks)
-                .FirstOrDefaultAsync(p => p.Id == projectId && p.UserId == user.Id);
-
-            if (project == null)
-                return NotFound();
-
-            return View(project);
-        }
-
         // GET: Create task
+        [HttpGet]
         public async Task<IActionResult> Create(int projectId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -69,17 +53,18 @@ namespace TodoPhoenix.Controllers
             if (project == null)
                 return Unauthorized();
 
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
+            task.Title = task.Title?.Trim();
+            task.Description = task.Description?.Trim();
 
-                return View(task);
+            if (task.DueDate.HasValue && task.DueDate.Value.Date < DateTime.UtcNow.Date)
+            {
+                ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
+                return PartialView(task);
             }
 
-            // Fix DateTime for PostgreSQL
+            if (!ModelState.IsValid)
+                return PartialView(task);
+
             if (task.DueDate.HasValue)
             {
                 task.DueDate = DateTime.SpecifyKind(task.DueDate.Value, DateTimeKind.Utc);
@@ -113,57 +98,6 @@ namespace TodoPhoenix.Controllers
             return Json(new { success = true });
         }
 
-        // GET: All tasks for current user
-        public async Task<IActionResult> All()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var tasks = await _context
-                .Tasks.Include(t => t.Project)
-                .Where(t => t.Project.UserId == user.Id)
-                .ToListAsync();
-
-            return View(tasks);
-        }
-
-        // GET: Tasks due today
-        public async Task<IActionResult> Today()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var today = DateTime.UtcNow.Date;
-
-            var tasks = await _context
-                .Tasks.Include(t => t.Project)
-                .Where(t =>
-                    t.Project.UserId == user.Id
-                    && t.DueDate.HasValue
-                    && t.DueDate.Value.Date == today
-                )
-                .ToListAsync();
-
-            return View(tasks);
-        }
-
-        // GET: Completed tasks
-        public async Task<IActionResult> Completed()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var tasks = await _context
-                .Tasks.Include(t => t.Project)
-                .Where(t => t.Project.UserId == user.Id && t.IsCompleted)
-                .ToListAsync();
-
-            return View(tasks);
-        }
-
         // DELETE: Task
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -187,6 +121,7 @@ namespace TodoPhoenix.Controllers
         }
 
         // GET: Edit task
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -219,8 +154,17 @@ namespace TodoPhoenix.Controllers
             if (existingTask == null)
                 return NotFound();
 
+            task.Title = task.Title?.Trim();
+            task.Description = task.Description?.Trim();
+
+            if (task.DueDate.HasValue && task.DueDate.Value.Date < DateTime.UtcNow.Date)
+            {
+                ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
+                return PartialView(task);
+            }
+
             if (!ModelState.IsValid)
-                return View(task);
+                return PartialView(task);
 
             // update fields
             existingTask.Title = task.Title;
@@ -230,6 +174,10 @@ namespace TodoPhoenix.Controllers
             if (task.DueDate.HasValue)
             {
                 existingTask.DueDate = DateTime.SpecifyKind(task.DueDate.Value, DateTimeKind.Utc);
+            }
+            else
+            {
+                existingTask.DueDate = null;
             }
 
             await _context.SaveChangesAsync();
