@@ -38,8 +38,10 @@
     else
     {
         <!-- Login/Register pages -->
-        <div class="container">
-            @RenderBody()
+        <div class="container flex-grow-1 d-flex align-items-center justify-content-center">
+            <div style="width:100%; max-width:400px;">
+                @RenderBody()
+            </div>
         </div>
     }
 
