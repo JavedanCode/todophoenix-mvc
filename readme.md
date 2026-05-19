@@ -1,100 +1,183 @@
-# 🌓 TodoPhoenix
+# TodoPhoenix
 
-A modern, full-stack task management application built with **ASP.NET Core MVC**, designed with a clean dark UI and a focus on simplicity, performance, and real-world architecture.
+TodoPhoenix is a modern task management web application built with ASP.NET Core MVC.  
+The project allows users to create projects, manage tasks, organize priorities, and track progress through a responsive dashboard interface.
 
-> Organize your work. Rebuild your focus. Rise again.
-
----
-
-## ✨ Features
-
-### 🔐 Authentication
-- User registration & login (ASP.NET Identity)
-- Secure password validation
-- Session-based authentication
-
-### 📁 Project Management
-- Create and delete projects
-- Project-based task organization
-- Isolated data per user
-
-### ✅ Task Management
-- Create, edit, delete tasks
-- Toggle completion status
-- Assign:
-  - Title
-  - Description
-  - Due date
-  - Priority (Low / Medium / High)
-
-### 🔍 Filtering
-- View all tasks
-- View today’s tasks
-- View completed tasks
-- Filter tasks by project
-
-### ⚡ UX Enhancements
-- Modal-based create/edit (no page reload flow)
-- Dynamic updates with Fetch API
-- Validation feedback inside modals
-- Clean dark-themed UI
+This project was developed as a university ASP.NET Core MVC course project and demonstrates authentication, CRUD operations, Entity Framework Core, SQLite integration, MVC architecture, validation, responsive UI design, and secure user workflows.
 
 ---
 
-## 🧱 Tech Stack
+## Features
 
-| Layer        | Technology |
-|-------------|-----------|
-| Backend      | ASP.NET Core MVC |
-| Frontend     | Razor Views + Bootstrap |
-| Database     | PostgreSQL |
-| ORM          | Entity Framework Core |
-| Auth         | ASP.NET Identity |
-| Client-side  | Vanilla JS (Fetch API) |
+### Authentication
+- User registration
+- User login
+- Secure logout
+- Protected routes using ASP.NET Identity
+- Anti-forgery token protection
+
+### Project Management
+- Create projects
+- Delete projects
+- Prevent duplicate project names per user
+- User-specific project ownership
+
+### Task Management
+- Create tasks
+- Edit tasks
+- Delete tasks
+- Toggle task completion
+- Priority system (Low / Medium / High)
+- Due dates
+- Task descriptions
+
+### Dashboard
+- Dynamic dashboard interface
+- Sidebar navigation
+- Project-based filtering
+- Task filtering:
+  - All Tasks
+  - Today's Tasks
+  - Completed Tasks
+- Active page highlighting
+- Dynamic page titles
+
+### Profile System
+- User profile page
+- Task statistics
+- Project statistics
+- Account overview
+
+### UI / UX
+- Responsive Bootstrap layout
+- Modern dark theme
+- Styled modal system
+- Priority indicators
+- Sidebar navigation
+- GitHub footer integration
 
 ---
 
-## 🧠 Architecture Overview
+## Technologies Used
 
-- MVC pattern (Controllers / Views / Models)
-- Entity Framework for data access
-- Identity for authentication & user isolation
-- Modular controllers:
-  - `ProjectsController`
-  - `TasksController`
-  - `DashboardController`
-- Partial rendering for modal workflows
+- ASP.NET Core MVC (.NET 8)
+- Entity Framework Core
+- SQLite
+- ASP.NET Identity
+- Bootstrap 5
+- Razor Views
+- LINQ
+- JavaScript Fetch API
 
 ---
 
-## 🚀 Getting Started
+## Architecture
 
-### 1. Clone the repo
+The project follows the MVC (Model-View-Controller) architecture:
+
+### Models
+- `Project`
+- `TaskItem`
+- `ApplicationDbContext`
+
+### Views
+- Razor views for authentication, dashboard, profile, and task management
+
+### Controllers
+- `AccountController`
+- `DashboardController`
+- `ProjectsController`
+- `TasksController`
+- `ProfileController`
+- `HomeController`
+
+---
+
+## Database Relationships
+
+### One-to-Many Relationships
+
+- One user → many projects
+- One project → many tasks
+
+Each authenticated user only has access to their own projects and tasks.
+
+---
+
+## Security Features
+
+- ASP.NET Identity authentication
+- Authorization protection using `[Authorize]`
+- Anti-forgery token validation
+- User ownership validation for all CRUD operations
+- Duplicate prevention for:
+  - Project names
+  - User emails
+
+---
+
+## Screenshots
+<img width="1917" height="915" alt="Login" src="https://github.com/user-attachments/assets/c56753fe-e3bf-46de-bf34-28722eacd97f" />
+
+---
+<img width="1919" height="915" alt="Register" src="https://github.com/user-attachments/assets/241546cc-6262-4157-b3be-f528dd3eef0b" />
+
+---
+<img width="1902" height="916" alt="Dashboard" src="https://github.com/user-attachments/assets/492c4d22-18b2-43de-a1c9-f0fca1d36b4a" />
+
+---
+<img width="1919" height="915" alt="Profile" src="https://github.com/user-attachments/assets/32537eda-8fe6-4022-8f4f-b915b3b84988" />
+
+---
+<img width="1917" height="913" alt="About" src="https://github.com/user-attachments/assets/1131d24d-0ec7-4f1c-9b9e-4a89d28a6e0b" />
+
+---
+<img width="1919" height="911" alt="Edit" src="https://github.com/user-attachments/assets/5acfaf2f-e580-4f4a-bcae-b406aed1423f" />
+
+---
+### Dashboard
+- Dynamic task dashboard
+- Priority badges
+- Filtering system
+- Responsive sidebar
+
+### Profile Page
+- User statistics
+- Account information
+
+### Authentication
+- Login page
+- Register page
+
+---
+
+## Installation
+
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/TodoPhoenix.git
-cd TodoPhoenix
+git clone https://github.com/JavedanCode/todophoenix-mvc.git
 ```
 
 ---
 
-### 2. Configure Database
+### 2. Navigate to the Project
 
-Update your connection string in:
-
-`appsettings.json`
-
-Example:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Host=localhost;Database=todophoenix;Username=postgres;Password=yourpassword"
-}
+```bash
+cd todophoenix-mvc
 ```
 
 ---
 
-### 3. Run Migrations
+### 3. Restore Packages
+
+```bash
+dotnet restore
+```
+
+---
+
+### 4. Apply Migrations
 
 ```bash
 dotnet ef database update
@@ -102,94 +185,77 @@ dotnet ef database update
 
 ---
 
-### 4. Run the app
+### 5. Run the Project
 
 ```bash
 dotnet run
 ```
 
-Visit:
+---
 
+## Default Database
+
+The project uses SQLite with the following database file:
+
+```plaintext
+TodoPhoenix.db
 ```
-http://localhost:xxxx
+
+Connection string:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Data Source=TodoPhoenix.db"
+}
 ```
 
 ---
 
-## 🔐 Validation & Security
+## Course Requirements Covered
 
-- Required fields enforced via DataAnnotations
-- Server-side validation with ModelState
-- Identity handles:
-  - Duplicate emails
-  - Password hashing
-  - Login security
+This project demonstrates:
 
----
-
-## 🎨 UI Philosophy
-
-- Minimalist, distraction-free design
-- Dark mode for long usage sessions
-- Fast interactions (no unnecessary reloads)
-- Focus on usability over visual clutter
-
----
-
-## 📸 Screenshots
-<img width="1902" height="869" alt="image" src="https://github.com/user-attachments/assets/97e0f1be-f162-4084-97d6-88339630144d" />
-
----
-<img width="1897" height="877" alt="image" src="https://github.com/user-attachments/assets/102a40d1-6bbc-48bb-b305-bb2d1a3d70f1" />
-
----
-<img width="1915" height="872" alt="image" src="https://github.com/user-attachments/assets/68531c50-ac4d-45f6-8cd3-6ea605e722ee" />
-
----
-<img width="1916" height="870" alt="image" src="https://github.com/user-attachments/assets/a892703a-ef75-422f-889a-92ad39539bfb" />
+- ASP.NET Core MVC
+- Entity Framework Core
+- SQLite Database
+- Code First Migration
+- Authentication & Authorization
+- CRUD Operations
+- Model Relationships
+- ViewModels
+- Validation
+- Responsive Bootstrap UI
+- Secure Routing
+- Dashboard Interface
+- Dynamic Filtering
+- Modern Web Application Structure
 
 ---
 
-## ⚠️ Deployment Notes
+## Future Improvements
 
-This is a **full-stack ASP.NET application**, which means:
+Potential future improvements include:
 
-❌ GitHub Pages is NOT supported (static hosting only)
-
-### ✅ Recommended deployment platforms:
-- Render
-- Railway
-- Azure App Service
-
----
-
-## 📌 Future Improvements
-
-- Drag & drop task ordering
-- Notifications / reminders
-- API layer (REST or GraphQL)
-- Mobile-friendly UI enhancements
-- Tagging system
+- Task search functionality
+- Drag-and-drop task organization
+- Task categories/tags
+- Notifications/reminders
+- Profile image uploads
+- Deployment support
 
 ---
 
-## 👤 Author
+## Author
 
-**Soren Persian**  
-GitHub: https://github.com/JavedanCode
+Developed by:
 
----
+**JavedanCode**
 
-## 🏁 Final Thoughts
-
-This project started as a learning exercise but evolved into a complete, production-style application covering:
-
-- Authentication
-- Database design
-- Full CRUD operations
-- Client-server interaction
-- UX refinement
+GitHub:  
+https://github.com/JavedanCode
 
 ---
 
-> Built with focus. Refined through debugging. Finished with intention.
+## License
+
+This project was created for educational purposes.
