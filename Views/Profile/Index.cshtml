@@ -1,0 +1,62 @@
+@model TodoPhoenix.Models.ViewModels.ProfileViewModel
+
+<div class="container">
+
+    <h2 class="mb-4">Profile</h2>
+
+    <div class="card p-4 mb-4">
+        <h5 class="mb-3">Account Information</h5>
+
+        <p>
+            <strong>Email:</strong>
+            @Model.Email
+        </p>
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.TotalProjects</h3>
+                <p>Total Projects</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.TotalTasks</h3>
+                <p>Total Tasks</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.CompletedTasks</h3>
+                <p>Completed Tasks</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.PendingTasks</h3>
+                <p>Pending Tasks</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.TasksDueToday</h3>
+                <p>Due Today</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h3>@Model.HighPriorityTasks</h3>
+                <p>High Priority</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>

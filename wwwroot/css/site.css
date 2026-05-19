@@ -211,3 +211,20 @@ a{
 .github-logo:hover {
   transform: rotate(360deg);
 }
+
+.sidebar-link {
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: block;
+}
+
+.sidebar-link:hover {
+    background-color: #1e293b;
+}
+
+.sidebar-link.active {
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+}

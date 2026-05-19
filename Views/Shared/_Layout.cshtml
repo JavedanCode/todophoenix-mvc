@@ -15,8 +15,30 @@
         <div class="app-container">
 
             <!-- SIDEBAR -->
-            <aside class="sidebar">
-                <h5 class="mb-3">TodoPhoenix</h5>
+                <aside class="sidebar">
+                    <h5 class="mb-4">TodoPhoenix</h5>
+
+                <nav class="d-flex flex-column gap-2 mb-4">
+
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                    asp-controller="Dashboard"
+                    asp-action="Index">
+                        Dashboard
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Profile" ? "active" : "")"
+                    asp-controller="Profile"
+                    asp-action="Index">
+                        Profile
+                    </a>
+
+                    <a asp-controller="Home"
+                    asp-action="About"
+                    class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">
+                        About
+                    </a>
+
+                </nav>
 
                 @RenderSection("Sidebar", required: false)
 

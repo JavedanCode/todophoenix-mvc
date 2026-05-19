@@ -7,17 +7,40 @@
     @section Sidebar {
     <h6 class="sidebar-heading">Filters</h6>
     <ul class="list-unstyled mb-4">
-        <li><a asp-action="Index" asp-route-filter="All">All Tasks</a></li>
-        <li><a asp-action="Index" asp-route-filter="Today">Today</a></li>
-        <li><a asp-action="Index" asp-route-filter="Completed">Completed</a></li>
+        <li>
+            <a class="sidebar-link @(Model.CurrentFilter == "All" ? "active" : "")"
+            asp-action="Index"
+            asp-route-filter="All">
+                All Tasks
+            </a>
+        </li>
+
+        <li>
+            <a class="sidebar-link @(Model.CurrentFilter == "Today" ? "active" : "")"
+            asp-action="Index"
+            asp-route-filter="Today">
+                Today
+            </a>
+        </li>
+
+        <li>
+            <a class="sidebar-link @(Model.CurrentFilter == "Completed" ? "active" : "")"
+            asp-action="Index"
+            asp-route-filter="Completed">
+                Completed
+            </a>
+        </li>
     </ul>
 
     <h6 class="sidebar-heading">Projects</h6>
     <ul class="list-unstyled mb-3">
         @foreach (var project in Model.Projects)
         {
-            <li class="d-flex justify-content-between align-items-center mb-1">
-                <a asp-action="Index" asp-route-projectId="@project.Id">
+            <li class="mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                <a class="sidebar-link @(Model.SelectedProjectId == project.Id ? "active" : "")"
+                        asp-action="Index"
+                        asp-route-projectId="@project.Id">
                     @project.Name
                 </a>
 
@@ -25,6 +48,8 @@
                         onclick="deleteProject(@project.Id)">
                     ×
                 </button>
+        
+                </div>
             </li>
         }
     </ul>
@@ -36,10 +61,30 @@
         + Add Project
     </button>
 }
+    @{
+        var pageTitle = "Tasks";
 
+        if (Model.SelectedProjectId != null)
+        {
+            pageTitle = Model.Projects
+                .FirstOrDefault(p => p.Id == Model.SelectedProjectId)?.Name ?? "Project";
+        }
+        else if (Model.CurrentFilter == "today")
+        {
+            pageTitle = "Today's Tasks";
+        }
+        else if (Model.CurrentFilter == "completed")
+        {
+            pageTitle = "Completed Tasks";
+        }
+        else
+        {
+            pageTitle = "All Tasks";
+        }
+    }
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <h2>Tasks</h2>
+        <h2>@pageTitle</h2>
 
         @if (Model.SelectedProjectId != null)
     {
