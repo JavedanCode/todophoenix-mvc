@@ -23,7 +23,7 @@ namespace TodoPhoenix.Controllers
         // GET: Login
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
                 return RedirectToAction("Index", "Dashboard");
 
             return View();
@@ -37,7 +37,7 @@ namespace TodoPhoenix.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email!);
 
             if (user == null)
             {
@@ -46,8 +46,8 @@ namespace TodoPhoenix.Controllers
             }
 
             var result = await _signInManager.PasswordSignInAsync(
-                user.UserName,
-                model.Password,
+                user.UserName!,
+                model.Password!,
                 false,
                 lockoutOnFailure: false
             );
@@ -62,7 +62,7 @@ namespace TodoPhoenix.Controllers
         // GET: Register
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
                 return RedirectToAction("Index", "Dashboard");
 
             return View();
@@ -76,7 +76,7 @@ namespace TodoPhoenix.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var user = new IdentityUser { UserName = model.Email!, Email = model.Email! };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/TodoPhoenix.styles.css" asp-append-version="true" />
 </head>
 <body>
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="app-container">
 

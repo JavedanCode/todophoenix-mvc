@@ -38,7 +38,9 @@ namespace TodoPhoenix.Controllers
             }
 
             // Base query
-            var tasksQuery = _context.Tasks.Where(t => t.Project.UserId == user.Id);
+            var tasksQuery = _context.Tasks.Where(t =>
+                t.Project != null && t.Project.UserId == user.Id
+            );
 
             // Apply filters
             if (projectId.HasValue)

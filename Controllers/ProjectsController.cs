@@ -47,7 +47,7 @@ namespace TodoPhoenix.Controllers
             if (user == null)
                 return Unauthorized();
 
-            project.Name = project.Name?.Trim();
+            project.Name = project.Name?.Trim() ?? "";
 
             if (!ModelState.IsValid)
                 return PartialView(project);

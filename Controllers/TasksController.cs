@@ -53,7 +53,7 @@ namespace TodoPhoenix.Controllers
             if (project == null)
                 return Unauthorized();
 
-            task.Title = task.Title?.Trim();
+            task.Title = task.Title?.Trim() ?? "";
             task.Description = task.Description?.Trim();
 
             if (task.DueDate.HasValue && task.DueDate.Value.Date < DateTime.UtcNow.Date)
@@ -87,7 +87,9 @@ namespace TodoPhoenix.Controllers
 
             var task = await _context
                 .Tasks.Include(t => t.Project)
-                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
+                .FirstOrDefaultAsync(t =>
+                    t.Id == id && t.Project != null && t.Project.UserId == user.Id
+                );
 
             if (task == null)
                 return NotFound();
@@ -109,7 +111,9 @@ namespace TodoPhoenix.Controllers
 
             var task = await _context
                 .Tasks.Include(t => t.Project)
-                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
+                .FirstOrDefaultAsync(t =>
+                    t.Id == id && t.Project != null && t.Project.UserId == user.Id
+                );
 
             if (task == null)
                 return NotFound();
@@ -130,7 +134,9 @@ namespace TodoPhoenix.Controllers
 
             var task = await _context
                 .Tasks.Include(t => t.Project)
-                .FirstOrDefaultAsync(t => t.Id == id && t.Project.UserId == user.Id);
+                .FirstOrDefaultAsync(t =>
+                    t.Id == id && t.Project != null && t.Project.UserId == user.Id
+                );
 
             if (task == null)
                 return NotFound();
@@ -149,12 +155,14 @@ namespace TodoPhoenix.Controllers
 
             var existingTask = await _context
                 .Tasks.Include(t => t.Project)
-                .FirstOrDefaultAsync(t => t.Id == task.Id && t.Project.UserId == user.Id);
+                .FirstOrDefaultAsync(t =>
+                    t.Id == task.Id && t.Project != null && t.Project.UserId == user.Id
+                );
 
             if (existingTask == null)
                 return NotFound();
 
-            task.Title = task.Title?.Trim();
+            task.Title = task.Title?.Trim() ?? "";
             task.Description = task.Description?.Trim();
 
             if (task.DueDate.HasValue && task.DueDate.Value.Date < DateTime.UtcNow.Date)

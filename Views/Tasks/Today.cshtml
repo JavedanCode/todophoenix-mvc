@@ -6,7 +6,7 @@
 @foreach (var task in Model)
 {
     <li>
-        <strong>@task.Title</strong> - @task.Project.Name
+        <strong>@task.Title</strong> - @task.Project?.Name
     </li>
 }
 </ul>

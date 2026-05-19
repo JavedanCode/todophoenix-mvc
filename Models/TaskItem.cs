@@ -13,13 +13,13 @@ namespace TodoPhoenix.Models
         public string Title { get; set; } = string.Empty;
 
         [StringLength(500)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
 
         public DateTime? DueDate { get; set; }
 
         [Required]
         [RegularExpression("Low|Medium|High")]
-        public string Priority { get; set; } = "Low";
+        public string? Priority { get; set; } = "Low";
 
         public bool IsCompleted { get; set; } = false;
 
@@ -28,6 +28,6 @@ namespace TodoPhoenix.Models
 
         [ForeignKey("ProjectId")]
         [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
     }
 }

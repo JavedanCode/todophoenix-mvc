@@ -14,11 +14,11 @@ namespace TodoPhoenix.Models
 
         [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
         [Required]
-        public string UserId { get; set; } = string.Empty;
+        public string? UserId { get; set; } = string.Empty;
 
         [ForeignKey("UserId")]
         [Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ValidateNever]
-        public IdentityUser User { get; set; }
+        public IdentityUser? User { get; set; }
 
         public List<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
